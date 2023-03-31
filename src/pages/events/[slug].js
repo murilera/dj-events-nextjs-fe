@@ -22,12 +22,12 @@ const EventPage = ({ evt }) => {
         </div>
 
         <span>
-          {evt.date} at {evt.time}
+          {new Date(evt.date).toLocaleDateString('en-US')} at {evt.time}
         </span>
         <h1>{evt.name}</h1>
         {evt.image && (
           <div className={styles.image}>
-            <Image src={evt.image} width={960} height={600} alt={evt.name} />
+            <Image src={evt.image.data.attributes.formats.medium.url} width={960} height={600} alt={evt.name} />
           </div>
         )}
 
@@ -52,8 +52,8 @@ export const getStaticPaths = async () => {
   const res = await fetch(`${API_URL}/api/events`)
   const events = await res.json()
 
-  const paths = events.map(evt => ({
-    params: { slug: evt.slug }
+  const paths = events.data.map(evt => ({
+    params: { slug: evt.attributes.slug }
   }))
 
   return {
@@ -63,12 +63,12 @@ export const getStaticPaths = async () => {
 }
 
 export const getStaticProps = async ({ params: { slug } }) => {
-  const res = await fetch(`${API_URL}/api/events/${slug}`)
+  const res = await fetch(`${API_URL}/api/events?filters[slug][$eq]=${slug}&populate=*`)
   const events = await res.json()
 
   return {
     props: {
-      evt: events[0]
+      evt: events.data[0].attributes
     },
     revalidate: 1
   }
