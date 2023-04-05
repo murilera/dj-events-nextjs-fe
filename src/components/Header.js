@@ -1,5 +1,6 @@
 import Link from "next/link"
 import styles from "@/styles/Header.module.css"
+import Search from "./Search"
 const Header = () => {
   return (
     <header className={styles.header}>
@@ -8,6 +9,8 @@ const Header = () => {
           DJ Events
         </Link>
       </div>
+
+      <Search />
 
       <nav>
         <ul>
