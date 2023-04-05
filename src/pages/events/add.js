@@ -54,7 +54,7 @@ const AddPage = () => {
         toast.error('Something Went Wrong')
       } else {
         const evt = await res.json()
-        router.push(`/events/${evt.slug}`)
+        router.push(`/events/${evt.data.attributes.slug}`)
       }
     }
   }
