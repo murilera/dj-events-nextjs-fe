@@ -10,6 +10,7 @@ import moment from "moment"
 import Image from "next/image"
 import { FaImage } from "react-icons/fa"
 import Modal from "@/components/Modal"
+import ImageUpload from "@/components/ImageUpload"
 
 const EditEventPage = ({ evt: { id, attributes } }) => {
   const [imagePreview, setImagePreview] = useState(attributes.image.data ? attributes.image.data.attributes.formats.thumbnail.url : null)
@@ -25,6 +26,13 @@ const EditEventPage = ({ evt: { id, attributes } }) => {
   })
 
   const [showModal, setShowModal] = useState(false)
+  const imageUploaded = async (e) => {
+    const res = await fetch(`${API_URL}/api/events/${id}?populate=*`)
+    const data = await res.json()
+
+    setImagePreview(data.data.attributes.image.data.attributes.formats.thumbnail.url)
+    setShowModal(false)
+  }
 
   const router = useRouter()
 
@@ -169,7 +177,7 @@ const EditEventPage = ({ evt: { id, attributes } }) => {
       </div >
 
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        IMAGE UPLOAD
+        <ImageUpload evtId={id} imageUploaded={imageUploaded} />
       </Modal>
     </Layout >
   )
