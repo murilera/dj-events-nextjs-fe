@@ -28,7 +28,7 @@ const EventPage = ({ id, evt }) => {
     <Layout>
       <div className={styles.event}>
         <div className={styles.controls}>
-          <Link href={`/events/edit/${evt.id}`}>
+          <Link href={`/events/edit/${id}`}>
             <FaPencilAlt /> Edit Event
           </Link>
           <a href='#' className={styles.delete} onClick={deleteEvent}>

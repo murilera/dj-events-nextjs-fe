@@ -7,8 +7,12 @@ import Link from "next/link"
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import moment from "moment"
+import Image from "next/image"
+import { FaImage } from "react-icons/fa"
+import Modal from "@/components/Modal"
 
 const EditEventPage = ({ evt: { id, attributes } }) => {
+  const [imagePreview, setImagePreview] = useState(attributes.image.data ? attributes.image.data.attributes.formats.thumbnail.url : null)
 
   const [values, setValues] = useState({
     name: attributes.name,
@@ -19,6 +23,8 @@ const EditEventPage = ({ evt: { id, attributes } }) => {
     time: attributes.time,
     description: attributes.description
   })
+
+  const [showModal, setShowModal] = useState(false)
 
   const router = useRouter()
 
@@ -148,14 +154,31 @@ const EditEventPage = ({ evt: { id, attributes } }) => {
 
         <input type="submit" value="Update Event" className="btn" />
       </form>
-    </Layout>
+
+      <h2>Event Image</h2>
+      {imagePreview ? (
+        <Image src={imagePreview} height={100} width={170} alt="" />
+      ) : <div>
+        <p>No image uploaded</p>
+      </div>}
+
+      <div>
+        <button className="btn-secondary" onClick={() => setShowModal(true)}>
+          <FaImage /> Set Image
+        </button>
+      </div >
+
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        IMAGE UPLOAD
+      </Modal>
+    </Layout >
   )
 }
 
 export default EditEventPage
 
 export async function getServerSideProps({ params: { id } }) {
-  const res = await fetch(`${API_URL}/api/events/${id}`)
+  const res = await fetch(`${API_URL}/api/events/${id}?populate=*`)
   const evt = await res.json()
 
   return {
